@@ -36,7 +36,6 @@ describe("<Nodes />", () => {
         nodes={nodes}
       />
     );
-
     expect(wrapper.find(Node).length).toEqual(2);
   });
 

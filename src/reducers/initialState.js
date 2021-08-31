@@ -25,7 +25,7 @@ const initialState = () => ({
         name: "Node 4",
         loading: false,
       },
-    ],
+    ]
   },
 });
 export default initialState;

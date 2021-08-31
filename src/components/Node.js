@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import PropTypes from "prop-types";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import {
@@ -11,8 +12,22 @@ import {
 } from "@material-ui/core";
 import colors from "../constants/colors";
 import Status from "./Status";
+import Block from "./Block";
 
 const Node = ({ node, expanded, toggleNodeExpanded }) => {
+  const [blockList, setBlockList] = useState([]);
+
+  const blocks = blockList?.data;
+
+  useEffect(() => {
+    axios(`${node.url}/api/v1/blocks`)
+      .then((res) => {
+        const data = res.data;
+        setBlockList(data);
+      })
+      .catch((err) => console.log(err));
+  }, [node.url]);
+
   const classes = useStyles();
   return (
     <Accordion
@@ -32,27 +47,43 @@ const Node = ({ node, expanded, toggleNodeExpanded }) => {
       >
         <Box className={classes.summaryContent}>
           <Box>
-            <Typography variant="h5" className={classes.heading}>
-              {node.name || "Unknown"}
+            <Typography
+              variant="h5"
+              component="span"
+              className={classes.heading}
+            >
+              {node?.name ?? "Unknown"}
             </Typography>
             <Typography
               variant="subtitle1"
+              component="span"
               className={classes.secondaryHeading}
             >
-              {node.url}
+              {node?.url}
             </Typography>
           </Box>
-          <Status loading={node.loading} online={node.online} />
+          <Status loading={node?.loading} online={node?.online} />
         </Box>
       </AccordionSummary>
       <AccordionDetails>
-        <Typography>Blocks go here</Typography>
+        <Typography className={classes.blockWidth} component="span">
+          {blocks?.map((block) => {
+            return (
+              <div key={block.id}>
+                <Block block={block} />
+              </div>
+            );
+          })}
+        </Typography>
       </AccordionDetails>
     </Accordion>
   );
 };
 
 const useStyles = makeStyles((theme) => ({
+  blockWidth: {
+    width:'100%'
+  },
   root: {
     margin: "16px 0",
     boxShadow: "0px 3px 6px 1px rgba(0,0,0,0.15)",

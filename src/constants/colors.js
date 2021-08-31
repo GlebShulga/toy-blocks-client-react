@@ -7,7 +7,7 @@ const colors = {
   success: "#1E9A57",
   contentBackground: "#f8f8f8",
   border: "#aaaaaa",
-  white: "#ffffff",
+  white: "#ffffff"
 };
 
 export default colors;
